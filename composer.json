@@ -1,0 +1,58 @@
+{
+    "name": "coquibot/coqui-toolkit-browser",
+    "description": "Browser automation toolkit for Coqui — web browsing via playwright-cli",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Carmelo Santana"
+        }
+    ],
+    "keywords": [
+        "php-agents",
+        "browser",
+        "playwright",
+        "web-automation",
+        "coqui",
+        "toolkit"
+    ],
+    "require": {
+        "php": "^8.4",
+        "carmelosantana/php-agents": "^0.3 || ^0.4 || @dev"
+    },
+    "require-dev": {
+        "pestphp/pest": "^3.0",
+        "phpstan/phpstan": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "CoquiBot\\Toolkits\\Browser\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "CoquiBot\\Toolkits\\Browser\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "scripts": {
+        "test": "pest",
+        "analyse": "phpstan analyse"
+    },
+    "extra": {
+        "php-agents": {
+            "toolkits": [
+                "CoquiBot\\Toolkits\\Browser\\BrowserToolkit"
+            ],
+            "description": "Browser automation — web browsing, page interaction, and data extraction via playwright-cli"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
