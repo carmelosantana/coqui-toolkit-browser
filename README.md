@@ -44,7 +44,6 @@ Capture page state as snapshots, screenshots, or PDFs.
 | `action` | enum | Yes | `snapshot`, `screenshot`, `pdf` |
 | `ref` | string | No | Target element ref |
 | `filename` | string | No | Output filename (auto-generated if omitted) |
-| `interactive_only` | bool | No | Snapshot: only show interactive elements |
 | `session` | string | No | Override session name |
 
 ### `browser_storage`

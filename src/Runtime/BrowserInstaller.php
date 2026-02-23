@@ -102,9 +102,14 @@ final class BrowserInstaller
             ];
         }
 
-        $browserResult = $this->runInDir($binary . ' install chromium 2>&1');
+        // Use npx playwright (not playwright-cli) to download browser binaries
+        $browserResult = $this->runInDir('npx playwright install chromium 2>&1');
 
-        // playwright-cli install may output to stderr even on success
+        // Create config so playwright-cli daemon uses bundled chromium,
+        // not Google Chrome (which may not be installed on the system).
+        $this->writeDefaultConfig();
+
+        // playwright install may output to stderr even on success
         $output = "## Browser Setup Complete\n\n";
         $output .= "**Node.js:** {$prereqs['node_version']}\n";
         $output .= "**npm:** {$prereqs['npm_version']}\n";
@@ -143,7 +148,7 @@ final class BrowserInstaller
             ];
         }
 
-        $result = $this->runInDir($binary . ' install --with-deps chromium 2>&1');
+        $result = $this->runInDir(escapeshellarg($binary) . ' install --with-deps chromium 2>&1');
 
         return [
             'success' => $result['exit_code'] === 0,
@@ -158,6 +163,34 @@ final class BrowserInstaller
     {
         $binary = $this->browserDir . '/node_modules/.bin/playwright-cli';
         return file_exists($binary) && is_executable($binary);
+    }
+
+    /**
+     * Write .playwright/cli.config.json to configure bundled Chromium.
+     *
+     * Without this config, playwright-cli defaults to Google Chrome
+     * (channel: "chrome"), which may not be installed on the system.
+     */
+    private function writeDefaultConfig(): void
+    {
+        $configDir = $this->browserDir . '/.playwright';
+        if (!is_dir($configDir)) {
+            mkdir($configDir, 0755, true);
+        }
+
+        $config = [
+            'browser' => [
+                'browserName' => 'chromium',
+                'launchOptions' => [
+                    'channel' => 'chromium',
+                ],
+            ],
+        ];
+
+        file_put_contents(
+            $configDir . '/cli.config.json',
+            json_encode($config, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n",
+        );
     }
 
     /**

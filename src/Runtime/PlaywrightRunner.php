@@ -153,7 +153,13 @@ final class PlaywrightRunner
         array $args,
         string $session,
     ): string {
-        $parts = [$binary];
+        // Quote the binary path to handle spaces in directories.
+        // The npx fallback ('npx playwright-cli') is two words and must not be wrapped.
+        if (!str_starts_with($binary, 'npx ')) {
+            $parts = [escapeshellarg($binary)];
+        } else {
+            $parts = [$binary];
+        }
 
         // Session flag
         $parts[] = '-s=' . escapeshellarg($session);
@@ -184,11 +190,12 @@ final class PlaywrightRunner
             2 => ['pipe', 'w'],
         ];
 
-        // Set PLAYWRIGHT_CLI_HOME equivalent — working directory for artifacts
+        // Inherit full environment so Playwright can find browsers at $HOME/.cache/ms-playwright/.
+        // Only set cwd to browserDir (below) — that's sufficient for config file resolution.
         $env = null;
         if (is_dir($envDir)) {
             $env = array_merge(getenv(), [
-                'HOME' => $envDir,
+                'PLAYWRIGHT_BROWSERS_PATH' => ($_SERVER['HOME'] ?? getenv('HOME') ?: '/root') . '/.cache/ms-playwright',
             ]);
         }
 

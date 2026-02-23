@@ -92,7 +92,6 @@ final class BrowserToolkit implements ToolkitInterface
 
             ### Tips
             - Always take a snapshot before interacting to get current refs.
-            - Use `browser_capture` with `interactive_only: true` for shorter snapshot output.
             - Fill forms with `fill` (replaces content) or `type` (appends characters).
             - Use `browser_storage` to save/load state across sessions with `state_save`/`state_load`.
             - The `eval` action can run arbitrary JavaScript on the page for advanced scraping.

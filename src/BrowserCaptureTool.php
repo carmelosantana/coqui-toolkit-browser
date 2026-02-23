@@ -48,9 +48,8 @@ final class BrowserCaptureTool implements ToolInterface
             - pdf: Save the page as a PDF document.
 
             **Snapshot tips:**
-            - Use `interactive_only: true` to see only interactive elements (faster, less noise)
             - Take a snapshot after every significant interaction to see updated state
-            - Element refs change when the page content changes — always use fresh refs
+            - Element refs change when the page content changes -- always use fresh refs
             DESC;
     }
 
@@ -78,11 +77,6 @@ final class BrowserCaptureTool implements ToolInterface
                 description: 'Capture full page screenshot (including content below the fold). Default: false.',
                 required: false,
             ),
-            new BoolParameter(
-                name: 'interactive_only',
-                description: 'Only show interactive elements in snapshot (buttons, links, inputs). Reduces noise. Default: false.',
-                required: false,
-            ),
             new StringParameter(
                 name: 'session',
                 description: 'Browser session name override.',
@@ -108,10 +102,6 @@ final class BrowserCaptureTool implements ToolInterface
     private function snapshot(array $input, string $session): ToolResult
     {
         $args = [];
-
-        if (!empty($input['interactive_only'])) {
-            $args[] = '-i';
-        }
 
         if (isset($input['filename']) && $input['filename'] !== '') {
             $args[] = '--filename=' . $input['filename'];
@@ -252,10 +242,6 @@ final class BrowserCaptureTool implements ToolInterface
                         'full_page' => [
                             'type' => 'boolean',
                             'description' => 'Full page screenshot. Default: false.',
-                        ],
-                        'interactive_only' => [
-                            'type' => 'boolean',
-                            'description' => 'Only interactive elements in snapshot.',
                         ],
                         'session' => [
                             'type' => 'string',
